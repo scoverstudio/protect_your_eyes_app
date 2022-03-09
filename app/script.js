@@ -1,11 +1,17 @@
 import React from "react";
 import { render } from "react-dom";
 
+const statuses = {
+  off: "off",
+  work: "work",
+  rest: "rest"
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: "off",
+      status: statuses.off,
       time: 0,
       timer: 0,
     };
@@ -21,19 +27,17 @@ class App extends React.Component {
 
     if (this.state.time === 0) {
       this.playBell();
-      if (this.state.status === "work") {
-        this.setState({ time: 20 });
-        this.setState({ status: "rest" });
-      } else if (this.state.status === "rest") {
-        this.setState({ time: 1200 });
-        this.setState({ status: "work" });
+      if (this.state.status === statuses.work) {
+        this.setState({ time: 20, status: statuses.rest });
+      } else if (this.state.status === statuses.rest) {
+        this.setState({ time: 1200, status: statuses.work });
       }
     }
   };
 
   handleClickStart = () => {
     this.setState({
-      status: "work",
+      status: statuses.work,
       timer: setInterval(this.step, 1000),
       time: 1200,
     });
@@ -41,7 +45,7 @@ class App extends React.Component {
 
   handleClickStop = () => {
     this.setState({
-      status: "off",
+      status: statuses.off,
       timer: clearInterval(this.state.timer),
       time: 0,
     });
@@ -70,7 +74,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>Protect your eyes</h1>
-        {this.state.status === "off" && (
+        {this.state.status === statuses.off && (
           <div>
             <p>
               According to optometrists in order to save your eyes, you should
@@ -83,17 +87,17 @@ class App extends React.Component {
             </p>
           </div>
         )}
-        {this.state.status === "work" && <img src="./images/work.png" />}
-        {this.state.status === "rest" && <img src="./images/rest.png" />}
-        {this.state.status !== "off" && (
+        {this.state.status === statuses.work && <img src="./images/work.png" />}
+        {this.state.status === statuses.rest && <img src="./images/rest.png" />}
+        {this.state.status !== statuses.off && (
           <div className="timer">{this.formatTime(this.state.time)}</div>
         )}
-        {this.state.status === "off" && (
+        {this.state.status === statuses.off && (
           <button onClick={this.handleClickStart} className="btn">
             Start
           </button>
         )}
-        {this.state.status !== "off" && (
+        {this.state.status !== statuses.off && (
           <button onClick={this.handleClickStop} className="btn">
             Stop
           </button>
